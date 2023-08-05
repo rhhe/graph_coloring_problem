@@ -7,6 +7,8 @@
    Boston University
    */
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 #define MAXPREAM 10000

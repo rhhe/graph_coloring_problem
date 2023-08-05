@@ -7,6 +7,8 @@
    Boston University
    */
 
+#include <stdlib.h>
+#include <string.h>
 #include "genbin.h"
 
 int get_params();

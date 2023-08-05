@@ -9,7 +9,8 @@
    Department of Computer Science
    Boston University
    */
-
+#include <stdlib.h>
+#include <string.h>
 #include "genbin.h"
 
 int get_params();
@@ -120,7 +121,7 @@ int get_params()
 			  break;
 		  }
 	}
-	
+
 	free(tmp);
 	
 	if (Nr_vert == 0 || Nr_edges == 0)
