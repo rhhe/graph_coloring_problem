@@ -1,32 +1,28 @@
-//
-// Created by USER_NAME: Ron on 2023/8/7.
-//
-
 #ifndef GRAPH_COLORING_PROBLEM_GRAPH_H
 #define GRAPH_COLORING_PROBLEM_GRAPH_H
 
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
+#include <set>
+#include <unordered_set>
 
 class Graph {
 public:
     int nNode_;
     int nEdge_;
     std::vector<std::pair<int, int>> edges_{};
+    std::vector<std::vector<int>> adjacencyMatrix_{};
+    std::vector<std::unordered_set<int>> neighborSets_{};
+    std::vector<std::vector<int>> neighborLists_{};
 public:
-    /**
-     *
-     * @param fileName
-     */
     void ReadFromFile(const char *fileName);
 
-    /**
-     *
-     * @param isIdFrom0
-     * @return
-     */
-    std::string ToString(bool isIdFrom0) const;
+    void PreprocessMultiModeDataStruct();
+
+    std::string ToString(bool isIdFrom0 = false) const;
+
+protected:
 };
 
 

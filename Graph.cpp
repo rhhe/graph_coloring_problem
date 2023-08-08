@@ -1,7 +1,3 @@
-//
-// Created by USER_NAME: Ron on 2023/8/7.
-//
-
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -53,6 +49,32 @@ void Graph::ReadFromFile(const char *fileName) {
     }
     inStream.close();
 }
+
+
+void Graph::PreprocessMultiModeDataStruct() {
+    adjacencyMatrix_.clear();
+    adjacencyMatrix_.resize(nNode_, std::vector<int>(nNode_, 0));
+    for (const auto &edge : edges_) {
+        adjacencyMatrix_.at(edge.first).at(edge.second) = 1;
+        adjacencyMatrix_.at(edge.second).at(edge.first) = 1;
+    }
+
+    neighborLists_.resize(nNode_, std::vector<int>());
+    for (auto &neighborList: neighborLists_) {
+        neighborList.reserve(nNode_);
+    }
+    for (const auto &edge: edges_) {
+        neighborLists_.at(edge.first).push_back(edge.second);
+        neighborLists_.at(edge.second).push_back(edge.first);
+    }
+
+    neighborSets_.resize(nNode_, std::unordered_set<int>());
+    for (const auto &edge: edges_) {
+        neighborSets_.at(edge.first).insert(edge.second);
+        neighborSets_.at(edge.second).insert(edge.first);
+    }
+}
+
 
 std::string Graph::ToString(bool isIdFrom0) const {
     std::stringstream ss;
