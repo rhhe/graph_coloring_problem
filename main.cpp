@@ -14,8 +14,8 @@ int main() {
     for (k = 100; k > 0; --k) {
         int seed = 1999;
         auto colors = Algorithm::ColorRandomly(graph, k, seed);
-        auto adjacentColorTable = Algorithm::MakeAdjacentColorCountTable(graph, colors, k);
-        int nConflict = Algorithm::CountConflictNumWithAdjacentTable(colors, adjacentColorTable);
+        auto adjacentColorTable = Algorithm::MakeAdjacentColorTable(graph, colors, k);
+        int nConflict = Algorithm::CountConflictWithAdjacentColorTable(colors, adjacentColorTable);
         std::cout << "k:" << k << ", nConflict: " << nConflict << std::endl;
     }
     return 0;
