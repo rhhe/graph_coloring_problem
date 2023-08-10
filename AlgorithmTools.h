@@ -1,9 +1,9 @@
-#ifndef GRAPH_COLORING_PROBLEM_ALGORITHM_H
-#define GRAPH_COLORING_PROBLEM_ALGORITHM_H
+#ifndef GRAPH_COLORING_PROBLEM_ALGORITHMTOOLS_H
+#define GRAPH_COLORING_PROBLEM_ALGORITHMTOOLS_H
 
 #include "Graph.h"
 
-class Algorithm {
+class AlgorithmTools {
 public:
     /**
      * 随机生成每个点的颜色
@@ -63,5 +63,4 @@ public:
                                          const Graph &graph, int iNode, int oldColor, int newColor);
 };
 
-
-#endif //GRAPH_COLORING_PROBLEM_ALGORITHM_H
+#endif //GRAPH_COLORING_PROBLEM_ALGORITHMTOOLS_H
