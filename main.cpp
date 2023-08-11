@@ -1,7 +1,7 @@
 #include <iostream>
-#include "Graph.h"
-#include "AlgorithmTools.h"
-#include "SimpleLocalSearch.h"
+#include "algorithm/Graph.h"
+#include "algorithm/AlgorithmTools.h"
+#include "algorithm/SimpleLocalSearch.h"
 
 using namespace std;
 

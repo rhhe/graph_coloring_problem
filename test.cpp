@@ -1,17 +1,23 @@
 #include <iostream>
-#include "Graph.h"
-#include "AlgorithmTools.h"
-#include "SimpleLocalSearch.h"
+#include "algorithm/Graph.h"
+#include "algorithm/AlgorithmTools.h"
+#include "algorithm/SimpleLocalSearch.h"
+#include "algorithm/RandomTools.h"
 
 using namespace std;
 
-void TestRandomColor() {
+Graph MakeGraph(const char *fileName = "../data_set/DSJC500.5.col") {
     Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
+    graph.ReadFromFile(fileName);
     graph.PreprocessMultiModeDataStruct();
+    return graph;
+}
+
+void TestRandomColor() {
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools());
     int k = 10;
-    int seed = 1999;
-    auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
+    auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
     std::set<int> colorSet(colors.begin(), colors.end());
     std::vector<int> allColor;
     allColor.assign(colorSet.begin(), colorSet.end());
@@ -19,36 +25,31 @@ void TestRandomColor() {
 }
 
 void TestConflictCount() {
-    Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
-    graph.PreprocessMultiModeDataStruct();
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools());
     int k = 1;
-    int seed = 1999;
-    auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
+    auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
     auto adjacentColorTable = AlgorithmTools::MakeAdjacentColorTable(graph, colors, k);
     int nConflict = AlgorithmTools::CountConflictWithAdjacentColorTable(colors, adjacentColorTable);
     assert(nConflict == graph.nEdge_);
 }
 
 void TestConflictCount2() {
-    Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
-    graph.PreprocessMultiModeDataStruct();
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools());
     int k = 1;
-    int seed = 1999;
-    auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
+    auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
     auto adjacentColorTable = AlgorithmTools::MakeAdjacentColorTable(graph, colors, k);
     int nConflict = AlgorithmTools::CountConflictWithGraph(colors, graph);
     assert(nConflict == graph.nEdge_);
 }
 
 void TestCalculatingDeltaConflictNum() {
-    Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
-    graph.PreprocessMultiModeDataStruct();
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools());
+
     int k = 5;
-    int seed = 1999;
-    auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
+    auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
     auto adjacentColorTable = AlgorithmTools::MakeAdjacentColorTable(graph, colors, k);
     int nConflict = AlgorithmTools::CountConflictWithAdjacentColorTable(colors, adjacentColorTable);
     int iNode = 20;
@@ -62,12 +63,11 @@ void TestCalculatingDeltaConflictNum() {
 }
 
 void TestUpdateAdjacentColorTable() {
-    Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
-    graph.PreprocessMultiModeDataStruct();
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools());
+
     int k = 5;
-    int seed = 1999;
-    auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
+    auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
     auto adjacentColorTable = AlgorithmTools::MakeAdjacentColorTable(graph, colors, k);
     int iNode = 20;
     int oldColor = colors.at(iNode);
@@ -83,21 +83,11 @@ void TestUpdateAdjacentColorTable() {
 }
 
 void TestSimpleLocalSearch() {
-    Graph graph;
-    graph.ReadFromFile("../DSJC500.5.col");
-    graph.PreprocessMultiModeDataStruct();
-    for (int k = 100; k > 0; --k) {
-        int seed = 1999 + k;
-        auto colors = AlgorithmTools::ColorRandomly(graph, k, seed);
-        SimpleLocalSearch simpleLocalSearch(graph, colors, k);
-        simpleLocalSearch.Search();
-        std::cout << "k:" << k
-                  << ", simpleLocalSearch.conflictNum:" << simpleLocalSearch.conflictNum
-                  << std::endl;
-        if (simpleLocalSearch.conflictNum > 0) {
-            break;
-        }
-    }
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomEngine(new RandomTools(12111));
+    int kStart = 100;
+    int kMin = SimpleLocalSearch::SearchMinColorNum(graph, randomEngine, kStart);
+    std::cout << "kMin=" << kMin << std::endl;
 }
 
 int main() {

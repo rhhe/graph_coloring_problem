@@ -4,21 +4,14 @@
 #include "SimpleLocalSearch.h"
 #include "AlgorithmTools.h"
 
-/**
- * 搜索；
- * 找到所有的邻域中最好的，如果最好的邻域，也使冲突数增加或不变，退出。
- * 否则，随机抽取一个，最好的邻域，移动到该邻域。
- */
+//#define _PRINT
+
+
 void SimpleLocalSearch::Search() {
     int obj = AlgorithmTools::CountConflictWithGraph(colors_, graph_);
-//    std::cout << "init" << ", obj: " << obj << std::endl;
-
-    std::random_device randomDevice;
-    std::mt19937 mt(randomDevice());
-    int seed = 100;
-    mt.seed(seed);
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
-
+#ifdef _PRINT
+    std::cout << "init" << ", obj: " << obj << std::endl;
+#endif
     adjacentColorTable_ = AlgorithmTools::MakeAdjacentColorTable(graph_, colors_, k_);
     std::vector<std::pair<int, int>> bestNeighbors{};
     int bestDeltaObj = 0;
@@ -26,7 +19,8 @@ void SimpleLocalSearch::Search() {
     while (true) {
         FindBestNeighbor(bestNeighbors, bestDeltaObj);
         if (bestDeltaObj >= 0) { break; }
-        int iNeighbor = static_cast<int>(distribution(mt) * static_cast<double>(bestNeighbors.size()))
+        int iNeighbor = static_cast<int>(randomTools_->distribution_(*randomTools_->mt_) *
+                                         static_cast<double>(bestNeighbors.size()))
                         % static_cast<int>(bestNeighbors.size());
         const auto &neighbor = bestNeighbors.at(iNeighbor);
         const auto &iNode = neighbor.first;
@@ -35,18 +29,25 @@ void SimpleLocalSearch::Search() {
         AlgorithmTools::UpdateAdjacentColorTable(adjacentColorTable_, graph_, iNode, oldColor, newColor);
         colors_.at(iNode) = newColor;
         obj += bestDeltaObj;
-//        std::cout << "iStep: " << iStep << ", obj: " << obj_ << std::endl;
+#ifdef _PRINT
+        std::cout << "iStep: " << iStep << ", obj: " << obj << std::endl;
+#endif
         iStep++;
     }
     int objDoubleCheck = AlgorithmTools::CountConflictWithGraph(colors_, graph_);
-//    std::cout << "objDoubleCheck: " << objDoubleCheck << std::endl;
+#ifdef _PRINT
+    std::cout << "objDoubleCheck: " << objDoubleCheck << std::endl;
+#endif
     if (objDoubleCheck != obj) {
         throw std::runtime_error("objDoubleCheck!= obj, " + std::to_string(objDoubleCheck) + "," + std::to_string(obj));
     }
     conflictNum = obj;
 }
 
-void SimpleLocalSearch::FindBestNeighbor(std::vector<std::pair<int, int>> &bestNeighbors, int &bestDeltaObj) {
+void SimpleLocalSearch::FindBestNeighbor(
+        std::vector<std::pair<int, int>> &bestNeighbors,
+        int &bestDeltaObj
+) {
     bestNeighbors.reserve((k_ - 1) * graph_.nNode_);
     bestNeighbors.clear();
     bestDeltaObj = graph_.nNode_;
@@ -65,4 +66,25 @@ void SimpleLocalSearch::FindBestNeighbor(std::vector<std::pair<int, int>> &bestN
             bestNeighbors.emplace_back(iNode, newColor);
         }
     }
+}
+
+int SimpleLocalSearch::SearchMinColorNum(
+        const Graph &graph,
+        std::shared_ptr<RandomTools> &randomTools,
+        int kStart
+) {
+    if (graph.nNode_ == 0) { return 0; }
+    if (kStart < 0) { kStart = graph.nNode_; }
+    int kMin = kStart;
+    for (int k = kStart; k > 0; --k) {
+        auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
+        SimpleLocalSearch simpleLocalSearch = SimpleLocalSearch(graph, colors, k);
+        simpleLocalSearch.SetRandomTools(randomTools);
+        simpleLocalSearch.Search();
+        std::cout << "k: " << k << ", conflictNum: " << simpleLocalSearch.conflictNum << std::endl;
+        if (simpleLocalSearch.conflictNum == 0) {
+            kMin = k;
+        } else { break; }
+    }
+    return kMin;
 }

@@ -1,15 +1,12 @@
 #include "AlgorithmTools.h"
-#include <random>
+#include "RandomTools.h"
 
-std::vector<int> AlgorithmTools::ColorRandomly(const Graph &graph, int k, int seed) {
-    std::random_device randomDevice;
-    std::mt19937 mt(randomDevice());
-    mt.seed(seed);
+std::vector<int> AlgorithmTools::ColorRandomly(const Graph &graph, int k,
+                                               std::shared_ptr<RandomTools> &randomTools) {
     std::uniform_int_distribution<int> distribution(0, k - 1);
-
     std::vector<int> colors(graph.nNode_);
     for (auto &color: colors) {
-        color = distribution(mt);
+        color = distribution(*randomTools->mt_);
     }
     return colors;
 }

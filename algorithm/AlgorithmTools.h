@@ -2,6 +2,7 @@
 #define GRAPH_COLORING_PROBLEM_ALGORITHMTOOLS_H
 
 #include "Graph.h"
+#include "RandomTools.h"
 
 class AlgorithmTools {
 public:
@@ -9,10 +10,10 @@ public:
      * 随机生成每个点的颜色
      * @param graph 图
      * @param k 颜色数
-     * @param seed 随机种子
+     * @param randomTools 随机工具
      * @return 数组，每个点的颜色值，用一个0到k-1之间的整数表示
      */
-    static std::vector<int> ColorRandomly(const Graph &graph, int k, int seed);
+    static std::vector<int> ColorRandomly(const Graph &graph, int k, std::shared_ptr<RandomTools> &randomTools);
 
     /**
      * 生成邻接矩阵（仇人表）
