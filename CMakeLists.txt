@@ -10,7 +10,10 @@ set(algorithm_files
         algorithm/AlgorithmTools.cpp
         algorithm/SimpleLocalSearch.h
         algorithm/SimpleLocalSearch.cpp
-        algorithm/RandomTools.h algorithm/TabuSearch.cpp algorithm/TabuSearch.h)
+        algorithm/RandomTools.h
+        algorithm/TabuSearch.cpp
+        algorithm/TabuSearch.h
+        )
 
 add_executable(main main.cpp ${algorithm_files})
 add_executable(test test.cpp ${algorithm_files})

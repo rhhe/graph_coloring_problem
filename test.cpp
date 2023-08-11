@@ -1,8 +1,9 @@
 #include <iostream>
 #include "algorithm/Graph.h"
 #include "algorithm/AlgorithmTools.h"
-#include "algorithm/SimpleLocalSearch.h"
 #include "algorithm/RandomTools.h"
+#include "algorithm/SimpleLocalSearch.h"
+#include "algorithm/TabuSearch.h"
 
 using namespace std;
 
@@ -84,10 +85,28 @@ void TestUpdateAdjacentColorTable() {
 
 void TestSimpleLocalSearch() {
     auto graph = MakeGraph();
-    std::shared_ptr<RandomTools> randomEngine(new RandomTools(12111));
+    std::shared_ptr<RandomTools> randomTools(new RandomTools(12111));
     int kStart = 100;
-    int kMin = SimpleLocalSearch::SearchMinColorNum(graph, randomEngine, kStart);
-    std::cout << "kMin=" << kMin << std::endl;
+    int kMin = SimpleLocalSearch::SearchMinColorNum(graph, randomTools, kStart);
+    std::cout << "SimpleLocalSearch: kMin=" << kMin << std::endl;
+}
+
+void TestTabuSearch() {
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools(12111));
+    int kStart = 100;
+    int kMin = kStart;
+    for (int k = kStart; k > 0; k--) {
+        auto colors = AlgorithmTools::ColorRandomly(graph, k, randomTools);
+        TabuSearch tabuSearch(graph, colors, k);
+        tabuSearch.SetRandomTools(randomTools);
+        tabuSearch.Search();
+        std::cout << "k: " << k << ", conflictNum: " << tabuSearch.bestConflictNum_ << std::endl;
+        if (tabuSearch.bestConflictNum_ == 0) {
+            kMin = k;
+        } else { break; }
+    }
+    std::cout << "TabuSearch: kMin=" << kMin << std::endl;
 }
 
 int main() {
@@ -97,5 +116,6 @@ int main() {
     TestCalculatingDeltaConflictNum();
     TestUpdateAdjacentColorTable();
     TestSimpleLocalSearch();
+    TestTabuSearch();
     return 0;
 }
