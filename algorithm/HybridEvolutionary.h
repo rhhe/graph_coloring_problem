@@ -30,7 +30,7 @@ public:
 public:
     // 输入
     std::shared_ptr<RandomTools> randomTools_; // 随机数工具
-    int populationSize_ = 10; // 种群大小
+    int populationSize_ = 20; // 种群大小
     int timeLimitSeconds_ = 300; // 总时间上限
     int stepsUpperBoundary_ = 100000; // 遗传的迭代步数上限
     int stepsEarlyStop_ = 100000; // 遗传迭代早停步数

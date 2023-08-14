@@ -144,5 +144,5 @@ e 500 497
 | -------------------- | ------------------------- | ---------------------------- |
 | 简单的局部搜索（LS） | TestSimpleLocalSearch();  | kMin=90                      |
 | 禁忌搜索（TS）       | TestTabuSearch();         | kMin=77                      |
-| 混合进化（HEA）      | TestHybridEvolutionary(); | kMin=53, timeLimitSeconds=60 |
+| 混合进化（HEA）      | TestHybridEvolutionary(); | kMin=52, timeLimitSeconds=60, populationSize = 20 |
 
