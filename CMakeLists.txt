@@ -13,6 +13,8 @@ set(algorithm_files
         algorithm/RandomTools.h
         algorithm/TabuSearch.cpp
         algorithm/TabuSearch.h
+        algorithm/HybridEvolutionary.cpp
+        algorithm/HybridEvolutionary.h
         )
 
 add_executable(main main.cpp ${algorithm_files})

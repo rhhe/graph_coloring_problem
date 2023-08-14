@@ -4,6 +4,7 @@
 #include "algorithm/RandomTools.h"
 #include "algorithm/SimpleLocalSearch.h"
 #include "algorithm/TabuSearch.h"
+#include "algorithm/HybridEvolutionary.h"
 
 using namespace std;
 
@@ -109,6 +110,24 @@ void TestTabuSearch() {
     std::cout << "TabuSearch: kMin=" << kMin << std::endl;
 }
 
+void TestHybridEvolutionary() {
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools(12111));
+    int kStart = 100;
+    int kMin = kStart;
+    for (int k = kStart; k > 0; k--) {
+        HybridEvolutionary opt(graph, k);
+        opt.randomTools_ = randomTools;
+        opt.timeLimitSeconds_ = 60;
+        opt.Search();
+        std::cout << "k: " << k << ", conflictNum: " << opt.bestConflictNum_ << std::endl;
+        if (opt.bestConflictNum_ == 0) {
+            kMin = k;
+        } else { break; }
+    }
+    std::cout << "HEA: kMin=" << kMin << std::endl;
+}
+
 int main() {
     TestRandomColor();
     TestConflictCount();
@@ -117,5 +136,6 @@ int main() {
     TestUpdateAdjacentColorTable();
     TestSimpleLocalSearch();
     TestTabuSearch();
+    TestHybridEvolutionary();
     return 0;
 }
