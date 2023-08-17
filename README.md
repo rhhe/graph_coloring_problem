@@ -140,9 +140,10 @@ e 500 497
 
 ## 3. 算法效果
 
-| 算法                 | 调用                      | 效果                         |
-| -------------------- | ------------------------- | ---------------------------- |
-| 简单的局部搜索（LS） | TestSimpleLocalSearch();  | kMin=90                      |
-| 禁忌搜索（TS）       | TestTabuSearch();         | kMin=77                      |
-| 混合进化（HEA）      | TestHybridEvolutionary(); | kMin=52, timeLimitSeconds=60, populationSize = 20 |
+| 算法                 | 调用                       | 效果    | 耗时(秒)                           |
+| -------------------- | -------------------------- | ------- | ---------------------------------- |
+| 简单的局部搜索（LS） | TestSimpleLocalSearch();   | kMin=90 |                                    |
+| 禁忌搜索（TS）       | TestTabuSearch();          | kMin=77 |                                    |
+| 混合进化（HEA）      | TestHybridEvolutionary();  | kMin=52 | timeLimit=60                       |
+| 混合精英进化（HEA2） | TestHybridEvolutionary2(); | kMin=49 | k=50需要116秒;<br />k=49需要619秒; |
 

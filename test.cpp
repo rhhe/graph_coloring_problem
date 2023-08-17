@@ -5,6 +5,7 @@
 #include "algorithm/SimpleLocalSearch.h"
 #include "algorithm/TabuSearch.h"
 #include "algorithm/HybridEvolutionary.h"
+#include "algorithm/HybridEvolutionary2.h"
 
 using namespace std;
 
@@ -128,14 +129,37 @@ void TestHybridEvolutionary() {
     std::cout << "HEA: kMin=" << kMin << std::endl;
 }
 
+void TestHybridEvolutionary2() {
+    auto t1 = std::chrono::system_clock::now();
+    auto graph = MakeGraph();
+    std::shared_ptr<RandomTools> randomTools(new RandomTools(12111));
+    int kStart = 100;
+    int kMin = kStart;
+    for (int k = kStart; k > 0; k--) {
+        HybridEvolutionary2 opt(graph, k);
+        opt.randomTools_ = randomTools;
+        opt.timeLimitSeconds_ = 3600;
+        opt.Search();
+        auto t2 = std::chrono::system_clock::now();
+        auto secondsCost = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+        std::cout << "k: " << k << ", conflictNum: " << opt.bestConflictNum_
+                  << ", time cost seconds: " << secondsCost << std::endl;
+        if (opt.bestConflictNum_ == 0) {
+            kMin = k;
+        } else { break; }
+    }
+    std::cout << "HEA2: kMin=" << kMin << std::endl;
+}
+
 int main() {
-    TestRandomColor();
-    TestConflictCount();
-    TestConflictCount2();
-    TestCalculatingDeltaConflictNum();
-    TestUpdateAdjacentColorTable();
-    TestSimpleLocalSearch();
-    TestTabuSearch();
-    TestHybridEvolutionary();
+//    TestRandomColor();
+//    TestConflictCount();
+//    TestConflictCount2();
+//    TestCalculatingDeltaConflictNum();
+//    TestUpdateAdjacentColorTable();
+//    TestSimpleLocalSearch();
+//    TestTabuSearch();
+//    TestHybridEvolutionary();
+    TestHybridEvolutionary2();
     return 0;
 }
